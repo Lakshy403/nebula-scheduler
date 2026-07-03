@@ -176,6 +176,7 @@ const logger = winston.createLogger({
  * const reqLogger = logger.child({ requestId: req.id });
  * reqLogger.info('Processing job enqueue', { jobName: body.name });
  */
-logger.child = (meta) => logger.child(meta); // winston's native child() is already available
+const nativeChild = logger.child.bind(logger);
+logger.child = (meta) => nativeChild(meta); // preserve winston's native child()
 
 export default logger;

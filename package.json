@@ -14,7 +14,10 @@
         "dev:worker": "npm run dev --workspace=@nebula/worker",
         "dev:scheduler": "npm run dev --workspace=@nebula/scheduler",
         "dev:dashboard": "npm run dev --workspace=@nebula/dashboard",
-        "check:imports": "node scripts/check-imports.mjs"
+        "check:imports": "node scripts/check-imports.mjs",
+        "test": "node --test tests/unit/retry-policy.test.js tests/integration/worker-failure-flow.test.js",
+        "test:unit": "node --test tests/unit/retry-policy.test.js",
+        "test:integration": "node --test tests/integration/worker-failure-flow.test.js"
     },
     "dependencies": {
         "axios": "^1.18.1",

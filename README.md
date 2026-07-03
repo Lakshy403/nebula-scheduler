@@ -25,6 +25,15 @@ Install dependencies at the repo root:
 npm install
 ```
 
+## Testing
+
+Run the automated test suite:
+
+```bash
+npm run test
+```
+
+
 Run the dashboard:
 
 ```bash
