@@ -1,0 +1,125 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: nebula_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nebula
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - nebula_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: nebula_redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nebula_net
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: nebula_api
+    command: ["node", "services/api/server.js"]
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=nebula
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=dev-secret-key
+      - DB_SYNC=true
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - nebula_net
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: nebula_scheduler
+    command: ["node", "services/scheduler/src/index.js"]
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=nebula
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=dev-secret-key
+      - DB_SYNC=false
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - nebula_net
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    command: ["node", "services/worker/src/index.js"]
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=nebula
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DB_SYNC=false
+      - QUEUES=default,high-priority,background-jobs
+    deploy:
+      replicas: 2
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - nebula_net
+
+  dashboard:
+    build:
+      context: ./apps/dashboard
+      dockerfile: Dockerfile
+    container_name: nebula_dashboard
+    ports:
+      - "8080:80"
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      - nebula_net
+
+networks:
+  nebula_net:
+    driver: bridge
+
+volumes:
+  mysql_data:
+

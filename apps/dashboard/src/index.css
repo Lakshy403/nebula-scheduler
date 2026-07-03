@@ -1,0 +1,250 @@
+/* ============================================================
+   Nebula Scheduler — Global CSS Foundation
+   ============================================================
+
+   Layer order:
+     1. @tailwind base    — Preflight reset
+     2. @tailwind components
+     3. @tailwind utilities
+     4. Custom layer: component-level overrides and design tokens
+============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base resets & root tokens ───────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    /* Set to light mode */
+    color-scheme: light;
+    /* Prevent layout shift from scrollbar appearance */
+    scrollbar-gutter: stable;
+    /* Smooth scrolling for anchor navigation */
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply text-text-primary antialiased min-h-screen bg-surface;
+    background-attachment: fixed;
+    /* Prevent body-level overflow that would hide scrollbars */
+    overflow-x: hidden;
+    /* Tighter line-height for dense data UIs */
+    line-height: 1.55;
+  }
+
+  /* Remove default margins from headings */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold leading-tight;
+  }
+
+  /* Focus ring — use brand color instead of browser default blue */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-surface;
+  }
+
+  /* Custom scrollbar — dark-mode friendly, narrow, unobtrusive */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-surface;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-border rounded-full border border-surface;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-text-tertiary;
+  }
+
+  /* Selection highlight */
+  ::selection {
+    @apply bg-brand-700 text-brand-100;
+  }
+
+  /* Code & pre — monospace baseline */
+  code, pre, kbd, samp {
+    @apply font-mono;
+  }
+
+  /* Remove default list styles on <ul>/<ol> inside components
+     (Tailwind preflight doesn't do this; we do it explicitly) */
+  ul, ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Remove default button styles — all button appearance comes from Tailwind */
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Remove default input styles */
+  input, textarea, select {
+    @apply bg-surface border border-surface-border text-text-primary;
+    font: inherit;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-muted-subtle;
+  }
+
+  /* Remove default anchor styles inside the app — styled per component */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+/* ── Component-level utility classes ─────────────────────── */
+@layer components {
+  /* ── Cards ─────────────────────────────────────────────── */
+  .card {
+    @apply backdrop-blur-xl bg-surface-raised/70 border border-white/60 rounded-xl shadow-card;
+  }
+  .card-lg {
+    @apply backdrop-blur-xl bg-surface-raised/70 border border-white/60 rounded-2xl shadow-card-lg;
+  }
+
+  /* ── Buttons ────────────────────────────────────────────── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2 rounded-lg text-sm font-medium
+           transition-all duration-150 ease-in-out
+           focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-surface
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-brand-500 hover:bg-brand-600 active:bg-brand-700
+           text-white focus-visible:ring-brand-500;
+  }
+  .btn-secondary {
+    @apply btn bg-surface hover:bg-surface-border
+           text-text-primary border border-surface-border
+           focus-visible:ring-text-tertiary shadow-sm;
+  }
+  .btn-danger {
+    @apply btn bg-danger hover:bg-red-600 active:bg-red-700
+           text-white focus-visible:ring-danger shadow-sm;
+  }
+  .btn-ghost {
+    @apply btn hover:bg-surface-border/50 text-text-secondary hover:text-text-primary
+           focus-visible:ring-text-tertiary;
+  }
+  .btn-icon {
+    @apply btn p-2 rounded-lg;
+  }
+
+  /* ── Form inputs ────────────────────────────────────────── */
+  .input {
+    @apply w-full px-3 py-2 rounded-lg text-sm
+           bg-surface border border-surface-border
+           text-text-primary placeholder:text-text-tertiary
+           focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500
+           transition-colors duration-150;
+  }
+
+  /* ── Status badges ──────────────────────────────────────── */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5
+           rounded-full text-xs font-medium tracking-wide;
+  }
+  .badge-queued     { @apply badge bg-slate-100  text-text-secondary; }
+  .badge-running    { @apply badge bg-brand-50   text-brand-700 border border-brand-200; }
+  .badge-succeeded  { @apply badge bg-success-muted text-success-text border border-success/20; }
+  .badge-failed     { @apply badge bg-danger-muted  text-danger-text border border-danger/20; }
+  .badge-cancelled  { @apply badge bg-slate-100     text-text-tertiary; }
+  .badge-dead       { @apply badge bg-danger-muted  text-danger-text border border-danger/20; }
+  .badge-scheduled  { @apply badge bg-warning-muted text-warning-text border border-warning/20; }
+  .badge-pending    { @apply badge bg-slate-100     text-text-secondary; }
+
+  /* ── Skeleton loader ────────────────────────────────────── */
+  .skeleton {
+    @apply rounded-md bg-surface-border
+           bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent)]
+           bg-200% animate-shimmer;
+  }
+
+  /* ── Sidebar nav link ───────────────────────────────────── */
+  .nav-link {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg
+           text-sm font-medium text-text-secondary
+           transition-all duration-150 ease-in-out
+           hover:bg-surface-border/50 hover:text-text-primary;
+  }
+  .nav-link.active {
+    @apply bg-brand-50 text-brand-700 border border-brand-200;
+  }
+
+  /* ── Page section header ────────────────────────────────── */
+  .section-header {
+    @apply flex items-center justify-between mb-6;
+  }
+  .page-title {
+    @apply text-xl font-semibold text-text-primary tracking-tight;
+  }
+  .page-subtitle {
+    @apply text-sm text-muted mt-0.5;
+  }
+
+  /* ── Data table ─────────────────────────────────────────── */
+  .data-table {
+    @apply w-full text-sm text-left;
+  }
+  .data-table thead {
+    @apply text-xs uppercase tracking-wider text-muted-subtle
+           border-b border-surface-border;
+  }
+  .data-table th {
+    @apply px-4 py-3 font-medium;
+  }
+  .data-table td {
+    @apply px-4 py-3.5 border-b border-surface-border/60;
+  }
+  .data-table tbody tr {
+    @apply transition-colors duration-100 hover:bg-surface-border/30;
+  }
+
+  /* ── Divider ────────────────────────────────────────────── */
+  .divider {
+    @apply border-t border-surface-border my-4;
+  }
+}
+
+/* ── Utility overrides ───────────────────────────────────── */
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-xl bg-surface-overlay border border-surface-border/50 shadow-card-lg;
+  }
+
+  /* Text gradient — for hero/branding elements */
+  .text-gradient {
+    @apply bg-clip-text text-transparent
+           bg-gradient-to-r from-brand-400 to-indigo-300;
+  }
+
+  /* Dot grid background for empty states */
+  .dot-grid {
+    background-image: radial-gradient(circle, #2a3347 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Truncate with ellipsis at a specific line count */
+  .line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+  .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+}

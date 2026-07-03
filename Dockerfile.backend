@@ -1,0 +1,41 @@
+# -----------------------------------------------------------------------------
+# Multi-stage Dockerfile for Node.js Backend Services (API, Scheduler, Worker)
+# -----------------------------------------------------------------------------
+
+# Stage 1: Builder
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy the entire monorepo source to resolve local workspace dependencies
+COPY . .
+
+# Install all dependencies (including devDependencies for potential build steps)
+# Using npm install because package-lock.json might not be present at the root yet
+RUN npm install
+
+# Stage 2: Runner
+FROM node:20-alpine AS runner
+
+# Set production environment
+ENV NODE_ENV=production
+
+WORKDIR /app
+
+# Create a non-root user and group for security (least privilege)
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -u 1001 -S nodejs -G nodejs
+
+# Copy the built application from the builder stage
+# Change ownership to the non-root user
+COPY --from=builder --chown=nodejs:nodejs /app /app
+
+# Ensure the logs directory exists and is writable by the non-root user
+RUN mkdir -p /app/logs && chown -R nodejs:nodejs /app/logs
+
+# Switch to the non-root user
+USER nodejs
+
+# The CMD is overridden in docker-compose.yml for each specific service
+# e.g., node services/api/server.js or node services/worker/src/index.js
+CMD ["node"]

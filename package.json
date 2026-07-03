@@ -1,0 +1,38 @@
+{
+    "name": "nebula-scheduler",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "description": "Production-ready distributed background job scheduling platform.",
+    "workspaces": [
+        "apps/*",
+        "services/*",
+        "packages/*"
+    ],
+    "scripts": {
+        "dev:api": "npm run dev --workspace=@nebula/api",
+        "dev:worker": "npm run dev --workspace=@nebula/worker",
+        "dev:scheduler": "npm run dev --workspace=@nebula/scheduler",
+        "dev:dashboard": "npm run dev --workspace=@nebula/dashboard",
+        "check:imports": "node scripts/check-imports.mjs"
+    },
+    "dependencies": {
+        "axios": "^1.18.1",
+        "cors": "^2.8.6",
+        "express": "^5.2.1",
+        "helmet": "^8.2.0",
+        "ioredis": "^5.11.1",
+        "jsonwebtoken": "^9.0.3",
+        "morgan": "^1.11.0",
+        "mysql2": "^3.22.5",
+        "puppeteer": "^25.3.0",
+        "redlock": "^5.0.0-beta.2",
+        "sequelize": "^6.37.8",
+        "swagger-jsdoc": "^6.3.0",
+        "swagger-ui-express": "^5.0.1",
+        "uuid": "^14.0.1",
+        "winston": "^3.19.0",
+        "winston-daily-rotate-file": "^5.0.0",
+        "zod": "^4.4.3"
+    }
+}
