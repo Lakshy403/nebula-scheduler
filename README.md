@@ -49,8 +49,7 @@ npm run dev:worker
 ```
 
 ## Useful Links
-- Frontend: [https://frontend-p8bl5hv67-lakshy403s-projects.vercel.app\](https://frontend
-p8bl5hv67-lakshy403s-projects.vercel.app)]](https://frontend-p8bl5hv67-lakshy403s-projects.vercel.app/login)
+- Frontend: [https://frontend-p8bl5hv67-lakshy403s-projects.vercel.app/login]
 - Dashboard: [http://localhost:8080](http://localhost:8080)
 - API health: [http://localhost:3000/health](http://localhost:3000/health)
 - Swagger docs: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
