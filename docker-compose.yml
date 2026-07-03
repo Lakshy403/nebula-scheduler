@@ -12,6 +12,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    ports:
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -34,6 +36,8 @@ services:
       dockerfile: Dockerfile.backend
     container_name: nebula_api
     command: ["node", "services/api/server.js"]
+    ports:
+      - "3000:3000"
     environment:
       - NODE_ENV=development
       - PORT=3000

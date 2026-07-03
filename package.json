@@ -15,9 +15,10 @@
         "dev:scheduler": "npm run dev --workspace=@nebula/scheduler",
         "dev:dashboard": "npm run dev --workspace=@nebula/dashboard",
         "check:imports": "node scripts/check-imports.mjs",
-        "test": "node --test tests/unit/retry-policy.test.js tests/integration/worker-failure-flow.test.js",
-        "test:unit": "node --test tests/unit/retry-policy.test.js",
-        "test:integration": "node --test tests/integration/worker-failure-flow.test.js"
+        "test": "node --experimental-vm-modules node_modules/.bin/jest services/worker/tests --runInBand --detectOpenHandles --forceExit",
+        "test:critical": "node --experimental-vm-modules node_modules/.bin/jest services/worker/tests --runInBand --detectOpenHandles --forceExit",
+        "test:concurrency": "node --experimental-vm-modules node_modules/.bin/jest services/worker/tests/concurrency.test.js --runInBand --detectOpenHandles --forceExit",
+        "test:lifecycle": "node --experimental-vm-modules node_modules/.bin/jest services/worker/tests/lifecycle.test.js --runInBand --detectOpenHandles --forceExit"
     },
     "dependencies": {
         "axios": "^1.18.1",
@@ -37,5 +38,9 @@
         "winston": "^3.19.0",
         "winston-daily-rotate-file": "^5.0.0",
         "zod": "^4.4.3"
+    },
+    "devDependencies": {
+        "@jest/globals": "^30.4.1",
+        "jest": "^30.4.2"
     }
 }
