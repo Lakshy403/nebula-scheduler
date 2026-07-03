@@ -1,4 +1,4 @@
-﻿import { QueryTypes } from 'sequelize';
+import { QueryTypes } from 'sequelize';
 import { sequelize, Job } from '../../../../packages/database/index.js';
 import { JobStatus, RetryStrategy } from '../../../../packages/database/models/Job.js';
 import { dlqHandler } from '../core/DLQHandler.js';
@@ -7,7 +7,7 @@ import logger from '../utils/logger.js';
 const MAX_RETRY_DELAY_MS = 60 * 60 * 1000;
 const EXECUTOR_DEFAULT_TIMEOUT_MS = parseInt(process.env.EXECUTOR_TIMEOUT_MS ?? '30000', 10);
 
-function computeNextScheduledAt(job) {
+export function computeNextScheduledAt(job) {
   const base = job.retry_backoff_base_ms ?? 1000;
   const attempt = job.retry_count ?? 0;
   let delayMs = base;

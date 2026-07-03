@@ -91,3 +91,24 @@ npm run dev --workspace=services/worker
 ```bash
 npm run dev --workspace=apps/dashboard
 ```
+
+---
+
+### Automated Tests
+
+The critical functionality of the worker backoff and claim engine is verified through automated tests using the native Node.js test runner (`node:test`). 
+To run the automated tests:
+
+```bash
+cd services/worker/src/executor
+node --test JobExecutor.test.js
+```
+
+### Vercel Deployment
+
+The frontend dashboard is configured for seamless deployment to Vercel:
+1. Log into Vercel and create a new project from your GitHub repository.
+2. In the setup screen, change the **Root Directory** to `apps/dashboard`.
+3. Vercel will automatically detect Vite and run `npm run build`.
+4. (Optional) Set the Environment Variable `VITE_API_BASE_URL` to point to a deployed backend if you choose to host the backend on Render/AWS.
+5. The included `vercel.json` ensures that Single Page Application (SPA) routing works perfectly.
