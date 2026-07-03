@@ -3,18 +3,18 @@
  * @description Application root: router, auth gate, and query client provider.
  *
  * Component tree:
- *  <QueryClientProvider>          — TanStack Query global cache
- *    <BrowserRouter>              — HTML5 history router
- *      <AuthInitializer>          — Runs initAuth() once on mount
+ *  <QueryClientProvider>          â€” TanStack Query global cache
+ *    <BrowserRouter>              â€” HTML5 history router
+ *      <AuthInitializer>          â€” Runs initAuth() once on mount
  *        <Routes>
- *          /login                 → <LoginPage> (public)
- *          /                      → <ProtectedRoute> → <DashboardLayout>
- *            index                → <OverviewPage>
- *            /jobs                → <JobsPage>
- *            /workers             → <WorkersPage>
- *            /dlq                 → <DLQPage>
- *            /settings            → <SettingsPage>
- *          *                      → <NotFoundPage>
+ *          /login                 â†’ <LoginPage> (public)
+ *          /                      â†’ <ProtectedRoute> â†’ <DashboardLayout>
+ *            index                â†’ <OverviewPage>
+ *            /jobs                â†’ <JobsPage>
+ *            /workers             â†’ <WorkersPage>
+ *            /dlq                 â†’ <DLQPage>
+ *            /settings            â†’ <SettingsPage>
+ *          *                      â†’ <NotFoundPage>
  *        </Routes>
  *      </AuthInitializer>
  *    </BrowserRouter>
@@ -49,14 +49,15 @@ import {
 import DashboardLayout            from '@/layouts/DashboardLayout';
 import BackgroundWaves            from '@/components/BackgroundWaves';
 
-// ── Lazy-loaded pages (code-splitting per route) ───────────────────────────
+// â”€â”€ Lazy-loaded pages (code-splitting per route) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const LoginPage    = React.lazy(() => import('@/pages/LoginPage'));
 const OverviewPage = React.lazy(() => import('@/pages/OverviewPage'));
 const JobsPage     = React.lazy(() => import('@/pages/JobsPage'));
 const WorkersPage  = React.lazy(() => import('@/pages/WorkersPage'));
 const DLQPage      = React.lazy(() => import('@/pages/DLQPage'));
 const SettingsPage = React.lazy(() => import('@/pages/SettingsPage'));
-const NotFoundPage = React.lazy(() => import('@/pages/NotFoundPage'));
+const ActivityLogPage = React.lazy(() => import('@/pages/ActivityLogPage'));
+const NotFoundPage = React.lazy(() => import('@/pages/NotFoundPage')); 
 
 // ---------------------------------------------------------------------------
 // TanStack Query client
@@ -72,7 +73,7 @@ const queryClient = new QueryClient({
       // Retry failed requests up to 2 times with a capped exponential delay.
       retry:              2,
       retryDelay:         (attempt) => Math.min(1000 * 2 ** attempt, 30_000),
-      // Do not re-fetch on window focus in a server dashboard context —
+      // Do not re-fetch on window focus in a server dashboard context â€”
       // dashboards stay open for hours and focus events fire very frequently.
       refetchOnWindowFocus: false,
     },
@@ -95,7 +96,7 @@ function AuthInitializer({ children }) {
 
   useEffect(() => {
     initAuth();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps — intentionally run once
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps â€” intentionally run once
 
   return children;
 }
@@ -122,7 +123,7 @@ function LoadingScreen() {
             </svg>
           </div>
         </div>
-        <p className="text-sm text-muted animate-pulse-slow">Initialising Nebula Scheduler…</p>
+        <p className="text-sm text-muted animate-pulse-slow">Initialising Nebula Schedulerâ€¦</p>
       </div>
     </div>
   );
@@ -136,9 +137,9 @@ function LoadingScreen() {
  * Guards a set of routes behind authentication.
  *
  * States:
- *  - `isReady = false` → render <LoadingScreen> (rehydration in progress).
- *  - `isReady = true, isAuthenticated = false` → redirect to /login.
- *  - `isReady = true, isAuthenticated = true`  → render <Outlet>.
+ *  - `isReady = false` â†’ render <LoadingScreen> (rehydration in progress).
+ *  - `isReady = true, isAuthenticated = false` â†’ redirect to /login.
+ *  - `isReady = true, isAuthenticated = true`  â†’ render <Outlet>.
  *
  * `replace` on the Navigate prevents the protected URL from polluting the
  * browser history when the user is redirected to login.
@@ -200,7 +201,7 @@ export default function App() {
       <BrowserRouter>
         <AuthInitializer>
           <Routes>
-            {/* ── Public routes ──────────────────────────────────────── */}
+            {/* â”€â”€ Public routes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <Route
               path="/login"
               element={
@@ -210,7 +211,7 @@ export default function App() {
               }
             />
 
-            {/* ── Protected routes (require auth) ────────────────────── */}
+            {/* â”€â”€ Protected routes (require auth) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <Route element={<ProtectedRoute />}>
               <Route element={<DashboardLayout />}>
                 <Route
@@ -253,10 +254,18 @@ export default function App() {
                     </PageSuspense>
                   }
                 />
+                <Route
+                  path="activity"
+                  element={
+                    <PageSuspense>
+                      <ActivityLogPage />
+                    </PageSuspense>
+                  }
+                />
               </Route>
             </Route>
 
-            {/* ── Catch-all ─────────────────────────────────────────── */}
+            {/* â”€â”€ Catch-all â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <Route
               path="*"
               element={
@@ -269,7 +278,7 @@ export default function App() {
         </AuthInitializer>
       </BrowserRouter>
 
-      {/* TanStack Query devtools — visible only in development */}
+      {/* TanStack Query devtools â€” visible only in development */}
       {import.meta.env.DEV && (
         <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
       )}

@@ -64,7 +64,7 @@ function JobActions({ job, onRetry, onCancel, onView }) {
     return <div className="flex items-center gap-0.5">{btn(onView, Eye, 'View details')}{btn(onCancel, XCircle, 'Cancel job', 'hover:text-danger-text')}</div>;
   }
   if (job.status === 'RUNNING') {
-    return <div className="flex items-center gap-0.5">{btn(onView, Eye, 'View logs')}<button className="btn-icon btn-ghost w-8 h-8 opacity-30 cursor-not-allowed" disabled title="Cannot cancel a running job"><XCircle className="w-4 h-4" /></button></div>;
+    return <div className="flex items-center gap-2">{btn(onView, Eye, 'View logs')}<span className="px-2 py-1 rounded-md text-[11px] font-medium text-success-text bg-success-muted border border-success-text/20">Running</span></div>;
   }
   if (job.status === 'FAILED') {
     return <div className="flex items-center gap-0.5">{btn(onView, Eye, 'View error')}{btn(onRetry, RotateCcw, 'Retry job', 'hover:text-warning-text')}</div>;

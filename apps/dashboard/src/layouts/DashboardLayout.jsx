@@ -37,6 +37,7 @@ import {
   Briefcase,
   Server,
   Skull,
+  Activity,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -87,6 +88,12 @@ const NAV_ITEMS = [
     icon:  Settings,
     label: 'Settings',
     description: 'Queues, limits, and access',
+  },
+  {
+    to:    '/activity',
+    icon:  Activity,
+    label: 'Activity Log',
+    description: 'Recent system events',
   },
 ];
 
@@ -335,7 +342,7 @@ function UserMenu({ user, onLogout }) {
                 Profile
               </button>
               <a
-                href="https://docs.nebulascheduler.dev"
+                href="https://github.com/Lakshy403/nebula-scheduler"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted hover:text-text-primary hover:bg-surface-border/50 transition-colors"
@@ -343,7 +350,7 @@ function UserMenu({ user, onLogout }) {
                 onClick={() => setOpen(false)}
               >
                 <ExternalLink className="w-4 h-4" aria-hidden="true" />
-                Documentation
+                Repository
               </a>
             </div>
 
